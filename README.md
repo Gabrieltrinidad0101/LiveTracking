@@ -5,20 +5,20 @@ LiveTracking is a personal project built to apply and reinforce the knowledge I'
 - Monorepo
 - Bazel
 - RabbitMQ
-- Hexagonal arquiterute
-- kubenetes
+- Hexagonal architecture
+- Kubernetes
 - Node.js
-- Golang
-- Typescript
-- DDD
-- Test
+- Go (Golang)
+- TypeScript
+- DDD (Domain-Driven Design)
+- Testing
 - CI/CD
 - Linter
-- Postgres
-- Mongodb
+- PostgreSQL
+- MongoDB
 - React
 - Microservices
-- Api getway
+- API Gateway
 - Socket.io
 - Redis
 - TailwindCSS / MUI
