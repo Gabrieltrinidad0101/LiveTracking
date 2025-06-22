@@ -1,0 +1,6 @@
+genrule(
+    name = "test",
+    srcs = [],
+    outs = ["test.txt"],
+    cmd = "sleep 5 && echo 'ssss' > index.html > $@",
+)
