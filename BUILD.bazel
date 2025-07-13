@@ -1,0 +1,7 @@
+load("//:my_custom_rule.bzl", "write_new_file")
+
+write_new_file(
+    name = "new_file",
+    my_input_file = "file.txt",  # ✅ sin './'
+    my_output_file = "new_file"
+)
