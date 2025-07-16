@@ -1,11 +1,19 @@
 package application
 
-type NoteUseCase struct {}
-
-func (n *NoteUseCase) Add() {
-
+type EventBus interface {
+	Publish(routingKey string, body []byte) error
 }
 
-func (n *NoteUseCase) Delete() {
+type NoteUseCase struct {
+	eventBus EventBus
+}
 
+func NewNoteUseCase(eventBus EventBus) *NoteUseCase {
+	return &NoteUseCase{
+		eventBus,
+	}
+}
+
+func (n *NoteUseCase) Add() {
+	n.eventBus.Publish("note", []byte{})
 }
