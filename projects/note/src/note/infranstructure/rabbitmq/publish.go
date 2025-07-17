@@ -4,27 +4,35 @@ import (
 	"github.com/streadway/amqp"
 )
 
+type JsonToBytes func(p interface{}) ([]byte, error)
+
 type rabbitMQPublisher struct {
-	channel  *amqp.Channel
-	exchange string
+	channel     *amqp.Channel
+	exchange    string
+	jsonToBytes JsonToBytes
 }
 
-func NewRabbitMQ(conn *amqp.Connection, exchange string, type_ string) (error, *rabbitMQPublisher) {
+func NewRabbitMQ(conn *amqp.Connection, exchange string, type_ string, jsonToBytes JsonToBytes) (*rabbitMQPublisher, error) {
 	channel, err := conn.Channel()
 	if err != nil {
-		return err, nil
+		return nil, err
 	}
 	err = channel.ExchangeDeclare(exchange, type_, true, false, false, false, nil)
 	if err != nil {
-		return err, nil
+		return nil, err
 	}
-	return nil, &rabbitMQPublisher{
+	return &rabbitMQPublisher{
 		channel,
 		exchange,
-	}
+		jsonToBytes,
+	}, nil
 }
 
-func (p *rabbitMQPublisher) Publish(routingKey string, body []byte) error {
+func (p *rabbitMQPublisher) Publish(routingKey string, body interface{}) error {
+	bytes, err := p.jsonToBytes(body)
+	if err != nil {
+		return err
+	}
 	return p.channel.Publish(
 		p.exchange,
 		routingKey,
@@ -32,7 +40,7 @@ func (p *rabbitMQPublisher) Publish(routingKey string, body []byte) error {
 		false,
 		amqp.Publishing{
 			ContentType: "application/json",
-			Body:        body,
+			Body:        bytes,
 		},
 	)
 }

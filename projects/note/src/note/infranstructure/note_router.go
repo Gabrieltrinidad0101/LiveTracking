@@ -1,10 +1,25 @@
 package infranstructure
 
-import "github.com/labstack/echo"
+import (
+	"log"
+	"note/src/note/application"
+	"note/src/note/infranstructure/rabbitmq"
+	"note/src/note/infranstructure/tools"
 
-func Router(e *echo.Echo) {
+	"github.com/labstack/echo"
+	"github.com/streadway/amqp"
+)
+
+func Router(e *echo.Echo, conn *amqp.Connection) {
 	note := e.Group("/note")
-	noteController := NoteController{}
+
+	jsonToBytes := tools.JsonToBytes
+	noteRabbit, err := rabbitmq.NewRabbitMQ(conn, "note", "topic", jsonToBytes)
+	if err != nil {
+		log.Fatalf("Error al crear el publisher: %v", err)
+	}
+	noteUseCase := application.NewNoteUseCase(noteRabbit)
+	noteController := NewNoteController(noteUseCase)
 
 	note.GET("/list", noteController.GetAllNotes)
 	note.POST("/create", noteController.CreateNote)
