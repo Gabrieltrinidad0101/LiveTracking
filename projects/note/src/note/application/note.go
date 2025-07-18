@@ -19,6 +19,6 @@ func NewNoteUseCase(eventBus EventBus) *NoteUseCase {
 }
 
 func (n *NoteUseCase) Add(note domain.Note) error {
-	err := n.eventBus.Publish("note", note)
+	err := n.eventBus.Publish("note:create", note)
 	return err
 }

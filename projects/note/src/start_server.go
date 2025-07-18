@@ -9,6 +9,6 @@ import (
 
 func Server(conn *amqp.Connection) {
 	e := echo.New()
-	note.Router(e,conn)
+	note.Router(e, conn)
 	e.Start("0.0.0.0:8000")
 }
